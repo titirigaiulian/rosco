@@ -19,11 +19,11 @@ package com.netflix.spinnaker.rosco.manifests.helm;
 import static org.mockito.Mockito.mock;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.netflix.spinnaker.kork.artifacts.model.Artifact;
 import com.netflix.spinnaker.rosco.jobs.BakeRecipe;
 import com.netflix.spinnaker.rosco.manifests.ArtifactDownloader;
 import com.netflix.spinnaker.rosco.manifests.BakeManifestEnvironment;
+import com.netflix.spinnaker.rosco.manifests.secrets.SecretsInjector;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -34,12 +34,13 @@ final class HelmTemplateUtilsTest {
   @Test
   public void nullReferenceTest() throws IOException {
     ArtifactDownloader artifactDownloader = mock(ArtifactDownloader.class);
-    HelmTemplateUtils helmTemplateUtils = new HelmTemplateUtils(artifactDownloader);
+    SecretsInjector secretsInjector = mock(SecretsInjector.class);
+    HelmTemplateUtils helmTemplateUtils =
+        new HelmTemplateUtils(artifactDownloader, secretsInjector);
     Artifact chartArtifact = Artifact.builder().name("test-artifact").version("3").build();
 
     HelmBakeManifestRequest bakeManifestRequest = new HelmBakeManifestRequest();
     bakeManifestRequest.setInputArtifacts(ImmutableList.of(chartArtifact));
-    bakeManifestRequest.setOverrides(ImmutableMap.of());
 
     try (BakeManifestEnvironment env = BakeManifestEnvironment.create()) {
       BakeRecipe recipe = helmTemplateUtils.buildBakeRecipe(env, bakeManifestRequest);

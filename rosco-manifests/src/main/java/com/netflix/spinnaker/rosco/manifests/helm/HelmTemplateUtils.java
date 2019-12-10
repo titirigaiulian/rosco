@@ -4,6 +4,7 @@ import com.netflix.spinnaker.kork.artifacts.model.Artifact;
 import com.netflix.spinnaker.rosco.jobs.BakeRecipe;
 import com.netflix.spinnaker.rosco.manifests.ArtifactDownloader;
 import com.netflix.spinnaker.rosco.manifests.BakeManifestEnvironment;
+import com.netflix.spinnaker.rosco.manifests.secrets.SecretsInjector;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -22,9 +23,11 @@ public class HelmTemplateUtils {
       Pattern.compile("# Source: .*/templates/tests/.*");
 
   private final ArtifactDownloader artifactDownloader;
+  private final SecretsInjector secretsInjector;
 
-  public HelmTemplateUtils(ArtifactDownloader artifactDownloader) {
+  public HelmTemplateUtils(ArtifactDownloader artifactDownloader, SecretsInjector secretsInjector) {
     this.artifactDownloader = artifactDownloader;
+    this.secretsInjector = secretsInjector;
   }
 
   public BakeRecipe buildBakeRecipe(BakeManifestEnvironment env, HelmBakeManifestRequest request) {
@@ -66,7 +69,7 @@ public class HelmTemplateUtils {
     if (!overrides.isEmpty()) {
       List<String> overrideList = new ArrayList<>();
       for (Map.Entry<String, Object> entry : overrides.entrySet()) {
-        overrideList.add(entry.getKey() + "=" + entry.getValue().toString());
+        overrideList.add(entry.getKey() + "=" + entry.getValue());
       }
       String overrideOption = request.isRawOverrides() ? "--set" : "--set-string";
       command.add(overrideOption);

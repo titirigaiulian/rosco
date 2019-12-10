@@ -1,8 +1,5 @@
 FROM ubuntu:bionic
 MAINTAINER delivery-engineering@netflix.com
-COPY --from=compile /compiled_sources/rosco-web/build/install/rosco /opt/rosco
-COPY --from=compile /compiled_sources/rosco-web/config              /opt/rosco
-COPY --from=compile /compiled_sources/rosco-web/config/packer       /opt/rosco/config/packer
 
 WORKDIR /packer
 
@@ -23,6 +20,11 @@ RUN mkdir kustomize && \
   tar xvz -C kustomize/
 
 ENV PATH "kustomize:$PATH"
+
+COPY --from=compile /compiled_sources/rosco-web/build/install/rosco /opt/rosco
+COPY --from=compile /compiled_sources/rosco-web/config              /opt/rosco
+COPY --from=compile /compiled_sources/rosco-web/config/packer       /opt/rosco/config/packer
+
 
 RUN adduser --disabled-login --system spinnaker
 USER spinnaker

@@ -11,6 +11,8 @@ dependencies {
   implementation "commons-io:commons-io"
   implementation "org.apache.commons:commons-compress:1.14"
   implementation "org.yaml:snakeyaml:1.25"
+  // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-secretsmanager
+  compile group: 'com.amazonaws', name: 'aws-java-sdk-secretsmanager', version: '1.11.688'
 
   implementation "com.squareup.retrofit:retrofit"
   testImplementation "org.assertj:assertj-core"
@@ -18,4 +20,6 @@ dependencies {
   testImplementation "org.junit.platform:junit-platform-runner"
   testImplementation "org.mockito:mockito-core"
   testImplementation "org.spockframework:spock-core"
+  testImplementation group: 'org.springframework', name: 'spring-test', version: '2.5'
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
